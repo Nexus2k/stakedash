@@ -31,9 +31,11 @@ export default function Main(props) {
     return () => unsubscribeAll && unsubscribeAll()
   }, [api, keyring, setBalances])
 
+  console.log(balances)
+
   return (
     <Grid.Column>
-      <h1>Balances</h1>
+      <h1>Balances of your accounts</h1>
       {accounts.length === 0 ? (
         <Label basic color="yellow">
           No accounts to be shown
@@ -75,7 +77,7 @@ export default function Main(props) {
                 <Table.Cell width={3}>
                   {balances &&
                     balances[account.address] &&
-                    balances[account.address]}
+                    balances[account.address]} ZTG
                 </Table.Cell>
               </Table.Row>
             ))}

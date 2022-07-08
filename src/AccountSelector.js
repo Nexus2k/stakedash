@@ -20,6 +20,8 @@ const FIREFOX_ADDON_URL =
 
 const acctAddr = acct => (acct ? acct.address : '')
 
+export let currentAddr = null
+
 function Main(props) {
   const {
     setCurrentAccount,
@@ -36,16 +38,18 @@ function Main(props) {
 
   const initialAddress =
     keyringOptions.length > 0 ? keyringOptions[0].value : ''
-
+  
   // Set the initial address
   useEffect(() => {
     // `setCurrentAccount()` is called only when currentAccount is null (uninitialized)
     !currentAccount &&
       initialAddress.length > 0 &&
       setCurrentAccount(keyring.getPair(initialAddress))
+    currentAddr = initialAddress
   }, [currentAccount, setCurrentAccount, keyring, initialAddress])
 
   const onChange = addr => {
+    currentAddr = addr
     setCurrentAccount(keyring.getPair(addr))
   }
 

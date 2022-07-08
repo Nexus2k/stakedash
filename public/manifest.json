@@ -1,6 +1,6 @@
 {
-  "short_name": "Substrate Front End",
-  "name": "Substrate Front End Template",
+  "short_name": "Zeitgeist Staking Dashboard",
+  "name": "Zeitgeist Staking Dashboard",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,6 +10,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#ffffff",
+  "background_color": "#000000"
 }
