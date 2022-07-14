@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Grid, Form, Dropdown, Input, Label } from 'semantic-ui-react'
+import eventBus from './EventBus'
 
 import { useSubstrateState } from './substrate-lib'
 import { TxButton } from './substrate-lib/components'
@@ -26,6 +27,7 @@ function Main(props) {
   const [formState, setFormState] = useState(initFormState)
   const { palletRpc, callable, inputParams } = formState
 
+  // Fill defaults
   useEffect(() => {
     async function getDefaults() {
       let collator = default_collator
@@ -48,7 +50,74 @@ function Main(props) {
       }
       setFormState(initFormState)   
     })
-  }, [])
+  }, [setFormState])
+
+  // handle changes of account address
+  useEffect(() => {
+    let isMounted = true
+
+    const getChangeAccountEvent = async (delegatorAccount) => {
+      console.log("data from eventbus: " + delegatorAccount)
+      let collator = default_collator
+      if (inputParams[0] && inputParams[0].value) {
+        collator = inputParams[0].value
+      }
+      let candidateInfo = await api.query.parachainStaking.candidateInfo(collator)
+      let delegatorState = await api.query.parachainStaking.delegatorState(delegatorAccount)
+      let delegatorCount = 0
+      if (delegatorState && delegatorState.value.delegations) {
+        delegatorCount = delegatorState.value.delegations.length()
+      }
+      initFormState = {
+        palletRpc: 'parachainStaking',
+        callable: 'delegate',
+        inputParams: [
+          {"value": collator},
+          {"value": "0"},
+          {"value": candidateInfo.value.delegationCount.toHuman()},
+          {"value": delegatorCount}
+        ]
+      }
+      if (isMounted) {
+        setFormState(initFormState) 
+      }
+    }
+
+    eventBus.on("changeAccount", (data) => {
+      getChangeAccountEvent(data)
+    })
+
+    const getChangeCollatorEvent = async (collatorAccount) => {
+      let delegatorCount = 0
+      if (inputParams[3] && inputParams[3].value) {
+        delegatorCount = inputParams[3].value
+      }
+      let candidateInfo = await api.query.parachainStaking.candidateInfo(collatorAccount)
+      initFormState = {
+        palletRpc: 'parachainStaking',
+        callable: 'delegate',
+        inputParams: [
+          {"value": collatorAccount},
+          {"value": "0"},
+          {"value": candidateInfo.value.delegationCount.toHuman()},
+          {"value": delegatorCount}
+        ]
+      }
+      if (isMounted) {
+        setFormState(initFormState) 
+      }
+    }
+
+    eventBus.on("changeCollator", (data) => {
+      getChangeCollatorEvent(data)
+    })
+
+    return () => {
+      isMounted = false
+      eventBus.remove("changeAccount")
+      eventBus.remove("changeCollator")
+    }
+  }, [inputParams, setFormState])
 
   const updatePalletRPCs = () => {
     if (!api) {

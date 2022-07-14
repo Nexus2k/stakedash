@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import eventBus from './EventBus'
 
 import {
   Menu,
@@ -50,8 +51,29 @@ function Main(props) {
 
   const onChange = addr => {
     currentAddr = addr
+    eventBus.dispatch("changeAccount", addr)
     setCurrentAccount(keyring.getPair(addr))
   }
+
+  useEffect(() => {
+    let isMounted = true
+
+    const getChangeAccountEvent = async (delegatorAccount) => {
+      if (isMounted) {
+        setCurrentAccount(keyring.getPair(delegatorAccount))
+      }
+    }
+
+    eventBus.on("changeAccount", (data) => {
+      getChangeAccountEvent(data)
+    })
+
+    return () => {
+      isMounted = false
+      eventBus.remove("changeAccount")
+    }
+  }, [setCurrentAccount])
+
 
   return (
     <Menu
@@ -120,11 +142,15 @@ function BalanceAnnotation(props) {
   useEffect(() => {
     let unsubscribe
 
+    const { unused0, chainDecimals, unused1 } = api.registry;
+    console.log(chainDecimals[0])
+    console.log(unused0,unused1)
+
     // If the user has selected an address, create a new subscription
     currentAccount &&
       api.query.system
         .account(acctAddr(currentAccount), balance =>
-          setAccountBalance(balance.data.free.toHuman())
+          setAccountBalance(balance.data.free / 10.0**chainDecimals[0])
         )
         .then(unsub => (unsubscribe = unsub))
         .catch(console.error)
@@ -135,7 +161,7 @@ function BalanceAnnotation(props) {
   return currentAccount ? (
     <Label pointing="left">
       <Icon name="money" color="green" />
-      {accountBalance}
+      {accountBalance} ZTG
     </Label>
   ) : null
 }

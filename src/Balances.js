@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Table, Grid, Button, Label } from 'semantic-ui-react'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useSubstrateState } from './substrate-lib'
+import eventBus from './EventBus';
 
 export default function Main(props) {
   const { api, keyring } = useSubstrateState()
@@ -12,12 +12,16 @@ export default function Main(props) {
     const addresses = keyring.getPairs().map(account => account.address)
     let unsubscribeAll = null
 
+    const { unused0, chainDecimals, unused1 } = api.registry;
+    console.log(chainDecimals[0])
+    console.log(unused0,unused1)
+
     api.query.system.account
       .multi(addresses, balances => {
         const balancesMap = addresses.reduce(
           (acc, address, index) => ({
             ...acc,
-            [address]: balances[index].data.free.toHuman(),
+            [address]: (balances[index].data.free / 10.0**chainDecimals[0]),
           }),
           {}
         )
@@ -31,7 +35,9 @@ export default function Main(props) {
     return () => unsubscribeAll && unsubscribeAll()
   }, [api, keyring, setBalances])
 
-  console.log(balances)
+  function sendDelegator(delegatorAccount) {
+    eventBus.dispatch("changeAccount", delegatorAccount)
+  };
 
   return (
     <Grid.Column>
@@ -63,7 +69,6 @@ export default function Main(props) {
                   <span style={{ display: 'inline-block', minWidth: '31em' }}>
                     {account.address}
                   </span>
-                  <CopyToClipboard text={account.address}>
                     <Button
                       basic
                       circular
@@ -71,8 +76,8 @@ export default function Main(props) {
                       size="mini"
                       color="blue"
                       icon="copy outline"
+                      onClick={() => sendDelegator(account.address)}
                     />
-                  </CopyToClipboard>
                 </Table.Cell>
                 <Table.Cell width={3}>
                   {balances &&
