@@ -37,9 +37,9 @@ function Main(props) {
       let candidateInfo = await api.query.parachainStaking.candidateInfo(collator)
       return [
         {"value":collator},
-        {"value":"0"},
+        {"value":0},
         {"value":candidateInfo.value.delegationCount.toHuman()},
-        {"value":"0"}
+        {"value":0}
       ]
     }
     getDefaults().then(result => {
@@ -64,9 +64,9 @@ function Main(props) {
       }
       let candidateInfo = await api.query.parachainStaking.candidateInfo(collator)
       let delegatorState = await api.query.parachainStaking.delegatorState(delegatorAccount)
-      let delegatorCount = 0
+      let delegatorCount = "0"
       if (delegatorState && delegatorState.value.delegations) {
-        delegatorCount = delegatorState.value.delegations.length()
+        delegatorCount = delegatorState.value.delegations.length().toString()
       }
       initFormState = {
         palletRpc: 'parachainStaking',
@@ -88,7 +88,7 @@ function Main(props) {
     })
 
     const getChangeCollatorEvent = async (collatorAccount) => {
-      let delegatorCount = 0
+      let delegatorCount = "0"
       if (inputParams[3] && inputParams[3].value) {
         delegatorCount = inputParams[3].value
       }

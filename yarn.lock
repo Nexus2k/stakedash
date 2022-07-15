@@ -13089,39 +13089,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"substrate-front-end-template@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "substrate-front-end-template@workspace:."
-  dependencies:
-    "@polkadot/api": ^7.10.1
-    "@polkadot/extension-dapp": ^0.42.7
-    "@polkadot/keyring": ^8.4.1
-    "@polkadot/networks": ^8.4.1
-    "@polkadot/types": ^7.10.1
-    "@polkadot/ui-keyring": ^1.1.1
-    "@polkadot/ui-settings": ^1.1.1
-    "@polkadot/util": ^8.4.1
-    "@polkadot/util-crypto": ^8.4.1
-    eslint: ^8.10.0
-    eslint-config-prettier: ^8.4.0
-    eslint-config-react-app: ^7.0.0
-    eslint-plugin-react: ^7.30.1
-    gh-pages: ^3.2.3
-    node-polyfill-webpack-plugin: ^1.1.4
-    prettier: 2.5.1
-    prop-types: ^15.8.1
-    react: ^17.0.2
-    react-app-rewired: ^2.2.1
-    react-copy-to-clipboard: ^5.0.4
-    react-dom: ^17.0.2
-    react-scripts: ^5.0.0
-    semantic-ui-css: "Semantic-Org/Semantic-UI-CSS#master"
-    semantic-ui-react: ^2.1.2
-    semistandard: ^16.0.1
-    stream-browserify: ^3.0.0
-  languageName: unknown
-  linkType: soft
-
 "supports-color@npm:^5.3.0":
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"
@@ -14590,3 +14557,36 @@ __metadata:
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
   languageName: node
   linkType: hard
+
+"ztg-stakedash@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "ztg-stakedash@workspace:."
+  dependencies:
+    "@polkadot/api": ^7.10.1
+    "@polkadot/extension-dapp": ^0.42.7
+    "@polkadot/keyring": ^8.4.1
+    "@polkadot/networks": ^8.4.1
+    "@polkadot/types": ^7.10.1
+    "@polkadot/ui-keyring": ^1.1.1
+    "@polkadot/ui-settings": ^1.1.1
+    "@polkadot/util": ^8.4.1
+    "@polkadot/util-crypto": ^8.4.1
+    eslint: ^8.10.0
+    eslint-config-prettier: ^8.4.0
+    eslint-config-react-app: ^7.0.0
+    eslint-plugin-react: ^7.30.1
+    gh-pages: ^3.2.3
+    node-polyfill-webpack-plugin: ^1.1.4
+    prettier: 2.5.1
+    prop-types: ^15.8.1
+    react: ^17.0.2
+    react-app-rewired: ^2.2.1
+    react-copy-to-clipboard: ^5.0.4
+    react-dom: ^17.0.2
+    react-scripts: ^5.0.0
+    semantic-ui-css: "Semantic-Org/Semantic-UI-CSS#master"
+    semantic-ui-react: ^2.1.2
+    semistandard: ^16.0.1
+    stream-browserify: ^3.0.0
+  languageName: unknown
+  linkType: soft
