@@ -195,6 +195,7 @@ function Main(props) {
   return (
     <Grid.Column width={8}>
       <h1>Stake/Delegate</h1>
+      <h3>Put amount with 10 extra zeros</h3>
       <Form>
         <Form.Field>
           <Dropdown
