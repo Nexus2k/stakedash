@@ -7,6 +7,7 @@ import eventBus from './EventBus';
 export default function Main(props) {
   const { api } = useSubstrateState()
   const [collators, setCollators] = useState([])
+  const [self_stakes, setMyStake] = useState([])
   const [num_collators, setNumCollators] = useState(0)
 
   const { unused0, chainDecimals, unused1 } = api.registry;
@@ -27,6 +28,28 @@ export default function Main(props) {
 
     return () => unsubscribeAll && unsubscribeAll()
   }, [api, setNumCollators])
+
+  // handle changes of account address
+  useEffect(() => {
+    let isMounted = true
+
+    const getChangeAccountEvent = async (delegatorAccount) => {
+      console.log("data from eventbus: " + delegatorAccount)
+      let delegatorState = await api.query.parachainStaking.delegatorState(delegatorAccount)
+      if (isMounted && delegatorState) {
+        setMyStake(delegatorState.value.delegations) 
+      }
+    }
+
+    eventBus.on("changeAccount", (data) => {
+      getChangeAccountEvent(data)
+    })
+
+    return () => {
+      isMounted = false
+      eventBus.remove("changeAccount")
+    }
+  }, [setMyStake])
 
   useEffect(() => {
     let unsubscribeAll = null
@@ -49,7 +72,18 @@ export default function Main(props) {
             console.log(error)
           }
         }
-        return {"name": display_name,"owner": candidate.owner.toHuman(),"amount": (candidate.amount / 10**chainDecimals[0])}
+        console.log("Self stake: "+self_stakes)
+        let my_amount = 0
+        if(self_stakes && self_stakes.filter(delegation => delegation.owner.toHuman() === candidate.owner.toHuman())[0]) {
+          my_amount = self_stakes.filter(delegation => delegation.owner.toHuman() === candidate.owner.toHuman())[0].amount / 10**chainDecimals[0]
+        }
+        console.log("My amount: "+my_amount)
+        return {
+          "name": display_name,
+          "owner": candidate.owner.toHuman(),
+          "amount": (candidate.amount / 10**chainDecimals[0]),
+          "my_amount": my_amount
+        }
       }))
       setCollators(formatted_candidates)
     }
@@ -59,7 +93,7 @@ export default function Main(props) {
     .catch(console.error)
 
     return () => unsubscribeAll && unsubscribeAll()
-  }, [api, setCollators])
+  }, [api, self_stakes, setCollators])
 
   function compare( a, b ) {
     if ( a["amount"] > b["amount"] ){
@@ -89,11 +123,14 @@ export default function Main(props) {
             <Table.Cell width={3} textAlign="right">
                 <strong>Name</strong>
               </Table.Cell>
-              <Table.Cell width={10}>
+              <Table.Cell width={8}>
                 <strong>Address</strong>
               </Table.Cell>
               <Table.Cell width={3}>
-                <strong>Balance</strong>
+                <strong>Total Balance</strong>
+              </Table.Cell>
+              <Table.Cell width={3}>
+                <strong>Your stake</strong>
               </Table.Cell>
             </Table.Row>
             {Array.from(collators).sort(compare).slice(0, num_collators).map(collator => (
@@ -101,7 +138,7 @@ export default function Main(props) {
               <Table.Cell width={3} textAlign="right">
                   {collator["name"]}
               </Table.Cell>
-              <Table.Cell width={10}>
+              <Table.Cell width={8}>
               <span style={{ display: 'inline-block', minWidth: '35em' }}>
                 {collator["owner"]}
                 </span>
@@ -112,16 +149,19 @@ export default function Main(props) {
                     size="mini"
                     color="blue"
                     icon="copy outline"
-                    onClick={() => sendCollator(collator["owner"])}
+                    onClick={() => sendCollator({"owner":collator["owner"],"my_amount":collator["my_amount"]})}
                   />
               </Table.Cell>
               <Table.Cell width={3}>
-                {collator["amount"]} ZTG
+                {collator["amount"].toFixed(2)} ZTG
+              </Table.Cell>
+              <Table.Cell width={3}>
+                {collator["my_amount"].toFixed(2)} ZTG
               </Table.Cell>
             </Table.Row>
             ))}
             <Table.Row>
-              <Table.Cell width={10} colSpan="3">
+              <Table.Cell textAlign="center" colSpan="4">
                 <strong>Outside of active collator set</strong>
               </Table.Cell>
             </Table.Row>
@@ -130,7 +170,7 @@ export default function Main(props) {
               <Table.Cell width={3} textAlign="right">
                   {collator["name"]}
               </Table.Cell>
-              <Table.Cell width={10}>
+              <Table.Cell width={8}>
                 <span style={{ display: 'inline-block', minWidth: '35em' }}>
                 {collator["owner"]}
                 </span>
@@ -141,11 +181,14 @@ export default function Main(props) {
                     size="mini"
                     color="blue"
                     icon="copy outline"
-                    onClick={() => sendCollator(collator["owner"])}
+                    onClick={() => sendCollator({"owner":collator["owner"],"my_amount":collator["my_amount"]})}
                   />
               </Table.Cell>
               <Table.Cell width={3}>
-                {collator["amount"]} ZTG
+                {collator["amount"].toFixed(2)} ZTG
+              </Table.Cell>
+              <Table.Cell width={3}>
+                {collator["my_amount"].toFixed(2)} ZTG
               </Table.Cell>
             </Table.Row>
             ))}

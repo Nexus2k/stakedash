@@ -66,7 +66,7 @@ function Main(props) {
       let delegatorState = await api.query.parachainStaking.delegatorState(delegatorAccount)
       let delegatorCount = "0"
       if (delegatorState && delegatorState.value.delegations) {
-        delegatorCount = delegatorState.value.delegations.length().toString()
+        delegatorCount = delegatorState.value.delegations.length.toString()
       }
       initFormState = {
         palletRpc: 'parachainStaking',
@@ -87,21 +87,33 @@ function Main(props) {
       getChangeAccountEvent(data)
     })
 
-    const getChangeCollatorEvent = async (collatorAccount) => {
+    const getChangeCollatorEvent = async (collatorData) => {
+      let collatorAccount = collatorData.owner
       let delegatorCount = "0"
       if (inputParams[3] && inputParams[3].value) {
         delegatorCount = inputParams[3].value
       }
       let candidateInfo = await api.query.parachainStaking.candidateInfo(collatorAccount)
-      initFormState = {
-        palletRpc: 'parachainStaking',
-        callable: 'delegate',
-        inputParams: [
-          {"value": collatorAccount},
-          {"value": "0"},
-          {"value": candidateInfo.value.delegationCount.toHuman()},
-          {"value": delegatorCount}
-        ]
+      if(collatorData.my_amount == 0) {
+        initFormState = {
+          palletRpc: 'parachainStaking',
+          callable: 'delegate',
+          inputParams: [
+            {"value": collatorAccount},
+            {"value": "0"},
+            {"value": candidateInfo.value.delegationCount.toHuman()},
+            {"value": delegatorCount}
+          ]
+        }
+      } else {
+        initFormState = {
+          palletRpc: 'parachainStaking',
+          callable: 'delegatorBondMore',
+          inputParams: [
+            {"value": collatorAccount},
+            {"value": "0"},
+          ]
+        }
       }
       if (isMounted) {
         setFormState(initFormState) 
