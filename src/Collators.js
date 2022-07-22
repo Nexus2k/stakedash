@@ -56,6 +56,7 @@ export default function Main(props) {
 
     api.query.parachainStaking.candidatePool(
       async candidates => {
+      console.log("# of collators: " + candidates.length)
       const formatted_candidates = await Promise.all(candidates.map(async (candidate) => {
         const id = await api.query.identity.identityOf(candidate.owner.toHuman())
         let display_name = ""
@@ -165,7 +166,7 @@ export default function Main(props) {
                 <strong>Outside of active collator set</strong>
               </Table.Cell>
             </Table.Row>
-            {Array.from(collators).sort(compare).slice(num_collators, -1).map(collator => (
+            {Array.from(collators).sort(compare).slice(num_collators).map(collator => (
             <Table.Row key={collator["owner"]}>
               <Table.Cell width={3} textAlign="right">
                   {collator["name"]}
