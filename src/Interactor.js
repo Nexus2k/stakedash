@@ -16,7 +16,7 @@ function Main(props) {
   const [callables, setCallables] = useState([])
   const [paramFields, setParamFields] = useState([])
 
-  const default_collator = "dE3cBpGqy7C5cMDsdPEpQstHAHXRKGPPqMCqjFHXJGRHeCPDj"
+  const default_collator = "dE1AAA5AxmbcvXLfLKwV8razVm5BxXVNpsgkgKLMB8jC4epbt"
 
   let initFormState = {
     palletRpc: 'parachainStaking',
