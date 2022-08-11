@@ -15,6 +15,7 @@ function Main(props) {
   const [palletRPCs, setPalletRPCs] = useState([])
   const [callables, setCallables] = useState([])
   const [paramFields, setParamFields] = useState([])
+  const [freeBalance, setFreeBalance] = useState("0")
 
   const default_collator = "dE1AAA5AxmbcvXLfLKwV8razVm5BxXVNpsgkgKLMB8jC4epbt"
 
@@ -56,7 +57,9 @@ function Main(props) {
   useEffect(() => {
     let isMounted = true
 
-    const getChangeAccountEvent = async (delegatorAccount) => {
+    const getChangeAccountEvent = async (data) => {
+      let delegatorAccount = data[0]
+      let free_balance = data[1] * 10.0**10
       console.log("data from eventbus: " + delegatorAccount)
       let collator = default_collator
       if (inputParams[0] && inputParams[0].value) {
@@ -73,13 +76,14 @@ function Main(props) {
         callable: 'delegate',
         inputParams: [
           {"value": collator},
-          {"value": "0"},
+          {"value": free_balance},
           {"value": candidateInfo.value.delegationCount.toHuman()},
           {"value": delegatorCount}
         ]
       }
       if (isMounted) {
         setFormState(initFormState) 
+        setFreeBalance(free_balance)
       }
     }
 
@@ -93,6 +97,10 @@ function Main(props) {
       if (inputParams[3] && inputParams[3].value) {
         delegatorCount = inputParams[3].value
       }
+      let free_balance = freeBalance
+      if (inputParams[2] && inputParams[2].value) {
+        free_balance = inputParams[2].value
+      }
       let candidateInfo = await api.query.parachainStaking.candidateInfo(collatorAccount)
       if(collatorData.my_amount == 0) {
         initFormState = {
@@ -100,7 +108,7 @@ function Main(props) {
           callable: 'delegate',
           inputParams: [
             {"value": collatorAccount},
-            {"value": "0"},
+            {"value": free_balance},
             {"value": candidateInfo.value.delegationCount.toHuman()},
             {"value": delegatorCount}
           ]
@@ -111,7 +119,7 @@ function Main(props) {
           callable: 'delegatorBondMore',
           inputParams: [
             {"value": collatorAccount},
-            {"value": "0"},
+            {"value": free_balance},
           ]
         }
       }
@@ -207,7 +215,7 @@ function Main(props) {
   return (
     <Grid.Column width={8}>
       <h1>Stake/Delegate</h1>
-      <h3>Put amount with 10 extra zeros</h3>
+      <h3>Amount is free funds -0.5 ZTG, with 10 extra zeroes</h3>
       <Form>
         <Form.Field>
           <Dropdown
