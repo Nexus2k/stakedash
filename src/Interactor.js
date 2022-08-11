@@ -98,8 +98,8 @@ function Main(props) {
         delegatorCount = inputParams[3].value
       }
       let free_balance = freeBalance
-      if (inputParams[2] && inputParams[2].value) {
-        free_balance = inputParams[2].value
+      if (inputParams[1] && inputParams[1].value) {
+        free_balance = inputParams[1].value
       }
       let candidateInfo = await api.query.parachainStaking.candidateInfo(collatorAccount)
       if(collatorData.my_amount == 0) {

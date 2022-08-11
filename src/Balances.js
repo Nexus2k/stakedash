@@ -64,7 +64,7 @@ export default function Main(props) {
   }, [api, keyring, setTotalBalances])
 
   function sendDelegator(delegatorAccount, balance) {
-    eventBus.dispatch("changeAccount", [delegatorAccount, balance-0.5])
+    eventBus.dispatch("changeAccount", [delegatorAccount, balance-0.5 < 0 ? 0 : balance-0.5])
   };
 
   return (
