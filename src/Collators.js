@@ -33,7 +33,8 @@ export default function Main(props) {
   useEffect(() => {
     let isMounted = true
 
-    const getChangeAccountEvent = async (delegatorAccount) => {
+    const getChangeAccountEvent = async (data) => {
+      let delegatorAccount = data[0]
       console.log("data from eventbus: " + delegatorAccount)
       let delegatorState = await api.query.parachainStaking.delegatorState(delegatorAccount)
       if (isMounted && delegatorState) {

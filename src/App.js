@@ -70,7 +70,7 @@ function Main() {
           <Grid.Row stretched centered>
             <p>
             <b>Usage:</b><br></br>
-            1. Click on copy symbol of account to use (with free balance)<br></br>
+            1. Click on copy symbol of account to use (with free balance, by default the app will take (free amount - 0.5 ZTG)*10^10)<br></br>
             2. Click on copy symbol of collator to use<br></br>(select one inside the active set / remember the lower the delegated amount the higher the rewards)<br></br>
             3. Click "Submit&Sign"
             </p>

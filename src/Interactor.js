@@ -76,7 +76,7 @@ function Main(props) {
         callable: 'delegate',
         inputParams: [
           {"value": collator},
-          {"value": free_balance},
+          {"value": free_balance.toString()},
           {"value": candidateInfo.value.delegationCount.toHuman()},
           {"value": delegatorCount}
         ]
@@ -108,7 +108,7 @@ function Main(props) {
           callable: 'delegate',
           inputParams: [
             {"value": collatorAccount},
-            {"value": free_balance},
+            {"value": free_balance.toString()},
             {"value": candidateInfo.value.delegationCount.toHuman()},
             {"value": delegatorCount}
           ]
@@ -119,7 +119,7 @@ function Main(props) {
           callable: 'delegatorBondMore',
           inputParams: [
             {"value": collatorAccount},
-            {"value": free_balance},
+            {"value": free_balance.toString()},
           ]
         }
       }

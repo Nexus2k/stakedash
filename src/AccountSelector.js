@@ -58,9 +58,9 @@ function Main(props) {
   useEffect(() => {
     let isMounted = true
 
-    const getChangeAccountEvent = async (delegatorAccount) => {
+    const getChangeAccountEvent = async (data) => {
       if (isMounted) {
-        setCurrentAccount(keyring.getPair(delegatorAccount))
+        setCurrentAccount(keyring.getPair(data[0]))
       }
     }
 
