@@ -63,8 +63,8 @@ export default function Main(props) {
     return () => unsubscribeAll && unsubscribeAll()
   }, [api, keyring, setTotalBalances])
 
-  function sendDelegator(delegatorAccount) {
-    eventBus.dispatch("changeAccount", delegatorAccount)
+  function sendDelegator(delegatorAccount, balance) {
+    eventBus.dispatch("changeAccount", [delegatorAccount, balance-0.5 < 0 ? 0 : balance-0.5])
   };
 
   return (
@@ -107,17 +107,15 @@ export default function Main(props) {
                       size="mini"
                       color="blue"
                       icon="copy outline"
-                      onClick={() => sendDelegator(account.address)}
+                      onClick={() => sendDelegator(account.address, balances && balances[account.address])}
                     />
                 </Table.Cell>
                 <Table.Cell width={3}>
                   {balances &&
-                    balances[account.address] &&
                     balances[account.address]} ZTG
                 </Table.Cell>
                 <Table.Cell width={3}>
                   {total_balances &&
-                    total_balances[account.address] &&
                     total_balances[account.address]} ZTG
                 </Table.Cell>
               </Table.Row>
