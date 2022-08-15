@@ -215,7 +215,7 @@ function Main(props) {
   return (
     <Grid.Column width={8}>
       <h1>Stake/Delegate</h1>
-      <h3>Amount is free funds -0.5 ZTG, with 10 extra zeroes</h3>
+      <h3>Amount is free funds -0.5 ZTG, with 10 extra zeros</h3>
       <Form>
         <Form.Field>
           <Dropdown
